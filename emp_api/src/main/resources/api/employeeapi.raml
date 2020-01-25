@@ -1,0 +1,20 @@
+#%RAML 1.0
+version: 1
+title: EmployeeAPI
+        
+types:
+  EmpDatatype: !include Datatypes/EmployeedataType.raml
+  EmpErrorMessage : !include Datatypes/ErrormessagedataType.raml
+/employee:
+  get:
+    description: Retrieves employee data
+    displayName: Get Employee
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include Examples/Employeeexample.json
+      404:
+        body:
+          application/json:
+            example:  !include Examples/Errormessageexample.raml

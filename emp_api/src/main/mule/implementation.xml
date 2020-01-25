@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="45c63017-6c2a-4cfb-bca7-21d62078a2f7" >
+		<http:request-connection host="dummy.restapiexample.com" port="8081"/>
+	</http:request-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="d0f61101-e53d-4467-9eb7-9448f1217b28" >
+		<db:my-sql-connection host="${secure::db.host}" port="${secure::db.port}" user="${secure::db.user}" password="${secure::db.password}" database="${secure::db.database}"/>
+	</db:config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="a3c8d16a-168f-44d5-8965-3394b7d13c03" file="secure_config.yaml" key="1234567812345678" />
+	<configuration-properties doc:name="Configuration properties" doc:id="d855f103-f2a8-4548-b956-5b2b46453ccf" file="config.yaml" />
+	<sub-flow name="getemp_implementationSub_Flow" doc:id="5ec49a59-916d-4747-9209-6b3668ce6e2d" >
+		<http:request method="GET" doc:name="Request" doc:id="2c72a2dd-d3f4-4770-9176-8a52110ac94b" config-ref="HTTP_Request_configuration" path="/api/v1/employees">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	client_id : "f83eadabb8324887a098531bb7842c96",
+	client_secret : "6a624e58d7614ddF87484c5b8BD103c4"
+}]]]></http:headers>
+		</http:request>
+		<db:insert doc:name="Insert" doc:id="b2c43652-3f4b-4a6b-908e-65c531cef698" config-ref="Database_Config">
+			<db:sql >insert into emp_attendance (id,employee_name,employee_salary,employee_age,profile_image)
+ values (:1,&quot;Gajanan&quot;,250000,23,xyz) </db:sql>
+		</db:insert>
+	</sub-flow>
+</mule>

@@ -1,0 +1,6 @@
+db:
+  user : "gajanandb4free"
+  password : "Complexroot@123"
+  host : "db4free.net"
+  port : "3306"
+  database : "emp_attendance"
